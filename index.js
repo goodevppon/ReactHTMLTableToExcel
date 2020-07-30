@@ -61,15 +61,21 @@ var ReactHTMLTableToExcel = function (_Component) {
         return null;
       }
 
-      if (document.getElementById(this.props.table).nodeType !== 1 || document.getElementById(this.props.table).nodeName !== 'TABLE') {
-        if (process.env.NODE_ENV !== 'production') {
-          console.error('Provided table property is not html table element');
-        }
+      var tableNode = document.getElementById(this.props.table);
 
-        return null;
+      if (tableNode.nodeType !== 1 || tableNode.nodeName !== 'TABLE') {
+
+        tableNode = tableNode.parentNode.getElementsByTagName("TABLE")[0];
+        if (tableNode.nodeType !== 1 || tableNode.nodeName !== 'TABLE') {
+          if (process.env.NODE_ENV !== 'production') {
+            console.error('Provided table property is not html table element');
+          }
+
+          return null;
+        }
       }
 
-      var table = document.getElementById(this.props.table).outerHTML;
+      var table = tableNode.outerHTML;
       var sheet = String(this.props.sheet);
       var filename = String(this.props.filename) + '.xls';
 

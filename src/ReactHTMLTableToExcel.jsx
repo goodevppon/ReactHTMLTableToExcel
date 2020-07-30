@@ -40,15 +40,21 @@ class ReactHTMLTableToExcel extends Component {
       return null;
     }
 
-    if (document.getElementById(this.props.table).nodeType !== 1 || document.getElementById(this.props.table).nodeName !== 'TABLE') {
-      if (process.env.NODE_ENV !== 'production') {
-        console.error('Provided table property is not html table element');
-      }
+    let tableNode = document.getElementById(this.props.table);
 
-      return null;
+    if (tableNode.nodeType !== 1 || tableNode.nodeName !== 'TABLE') {
+
+      tableNode = tableNode.parentNode.getElementsByTagName("TABLE")[0];        
+      if (tableNode.nodeType !== 1 || tableNode.nodeName !== 'TABLE') {
+        if (process.env.NODE_ENV !== 'production') {
+          console.error('Provided table property is not html table element');
+        }
+
+        return null;
+      }
     }
 
-    const table = document.getElementById(this.props.table).outerHTML;
+    const table = tableNode.outerHTML;
     const sheet = String(this.props.sheet);
     const filename = `${String(this.props.filename)}.xls`;
 
